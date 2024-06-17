@@ -31,9 +31,16 @@ class Pool
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    /**
+     * @var Collection<int, PoolCompletion>
+     */
+    #[ORM\OneToMany(targetEntity: PoolCompletion::class, mappedBy: 'pool', orphanRemoval: true)]
+    private Collection $poolCompletions;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
+        $this->poolCompletions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,6 +104,36 @@ class Pool
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PoolCompletion>
+     */
+    public function getPoolCompletions(): Collection
+    {
+        return $this->poolCompletions;
+    }
+
+    public function addPoolCompletion(PoolCompletion $poolCompletion): static
+    {
+        if (!$this->poolCompletions->contains($poolCompletion)) {
+            $this->poolCompletions->add($poolCompletion);
+            $poolCompletion->setPool($this);
+        }
+
+        return $this;
+    }
+
+    public function removePoolCompletion(PoolCompletion $poolCompletion): static
+    {
+        if ($this->poolCompletions->removeElement($poolCompletion)) {
+            // set the owning side to null (unless already changed)
+            if ($poolCompletion->getPool() === $this) {
+                $poolCompletion->setPool(null);
+            }
+        }
 
         return $this;
     }

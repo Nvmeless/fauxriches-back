@@ -39,8 +39,6 @@ class Song
     {
         return $this->name;
     }
- #[Groups([ "getSongs"])]
-
 
  #[Groups([ "getSongs"])]
     public function setName(string $name): static

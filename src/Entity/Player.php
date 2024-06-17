@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PlayerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
@@ -22,6 +24,17 @@ class Player
 
     #[ORM\Column]
     private ?bool $done = false;
+
+    /**
+     * @var Collection<int, PoolCompletion>
+     */
+    #[ORM\OneToMany(targetEntity: PoolCompletion::class, mappedBy: 'player')]
+    private Collection $poolCompletions;
+
+    public function __construct()
+    {
+        $this->poolCompletions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -60,6 +73,36 @@ class Player
     public function setDone(bool $done): static
     {
         $this->done = $done;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PoolCompletion>
+     */
+    public function getPoolCompletions(): Collection
+    {
+        return $this->poolCompletions;
+    }
+
+    public function addPoolCompletion(PoolCompletion $poolCompletion): static
+    {
+        if (!$this->poolCompletions->contains($poolCompletion)) {
+            $this->poolCompletions->add($poolCompletion);
+            $poolCompletion->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removePoolCompletion(PoolCompletion $poolCompletion): static
+    {
+        if ($this->poolCompletions->removeElement($poolCompletion)) {
+            // set the owning side to null (unless already changed)
+            if ($poolCompletion->getPlayer() === $this) {
+                $poolCompletion->setPlayer(null);
+            }
+        }
 
         return $this;
     }

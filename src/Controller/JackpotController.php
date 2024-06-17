@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Player;
 use App\Repository\PoolRepository;
 use App\Repository\PlayerRepository;
+use App\Repository\PoolCompletionRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,11 +28,14 @@ class JackpotController extends AbstractController
 
 
         #[Route('api/jackpot/{code}', name: 'jackpot.roll')]
-    public function roll(string $code,EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PoolRepository $poolRepository, SerializerInterface $serializer, Request $request): JsonResponse
+    public function roll(string $code,PoolCompletionRepository $poolCompletionRepository, EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PoolRepository $poolRepository, SerializerInterface $serializer, Request $request): JsonResponse
     {
         $playerIp = $request->getClientIp();
         $player = $playerRepository->findBy(["ip" => $playerIp]);
+        
+        
         if(count($player)){
+            
             $player = $player[0];
             $song = $player->getSong();
             $player->setDone(true);
