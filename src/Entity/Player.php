@@ -20,6 +20,9 @@ class Player
     #[ORM\JoinColumn(nullable: false)]
     private ?Song $song = null;
 
+    #[ORM\Column]
+    private ?bool $done = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,18 @@ class Player
     public function setSong(?Song $song): static
     {
         $this->song = $song;
+
+        return $this;
+    }
+
+    public function isDone(): ?bool
+    {
+        return $this->done;
+    }
+
+    public function setDone(bool $done): static
+    {
+        $this->done = $done;
 
         return $this;
     }

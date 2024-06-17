@@ -17,7 +17,7 @@ class Song
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
-    private ?bool $done = null;
+
     /**
      * @var Collection<int, Pool>
      */
@@ -41,9 +41,7 @@ class Song
     }
  #[Groups([ "getSongs"])]
 
- public function getDone( ): ?bool{
-   return $this->done;
- }
+
  #[Groups([ "getSongs"])]
     public function setName(string $name): static
     {
@@ -51,12 +49,7 @@ class Song
 
         return $this;
     }
-   public function setDone(bool $done): static
-    {
-        $this->done = $done;
 
-        return $this;
-    }
     /**
      * @return Collection<int, Pool>
      */

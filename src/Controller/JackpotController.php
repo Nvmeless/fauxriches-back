@@ -34,14 +34,12 @@ class JackpotController extends AbstractController
         if(count($player)){
             $player = $player[0];
             $song = $player->getSong();
-            $song->setDone(true);
-            
+            $player->setDone(true);
         } else {
             $pool = $poolRepository->findBy(["code" => $code]);
             if(count($pool)){
                 $songs = $pool[0]->getSongs();
                 $song = $songs[array_rand($songs->toArray())];
-                $song->setDone(false);
                 $player = new Player();
                 $player->setIp($playerIp);
                 $player->setSong($song);

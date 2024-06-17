@@ -25,6 +25,12 @@ class Pool
     #[ORM\ManyToMany(targetEntity: Song::class, inversedBy: 'pools')]
     private Collection $songs;
 
+    #[ORM\ManyToOne]
+    private ?DownloadedFile $picture = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -67,6 +73,30 @@ class Pool
     public function removeSong(Song $song): static
     {
         $this->songs->removeElement($song);
+
+        return $this;
+    }
+
+    public function getPicture(): ?DownloadedFile
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?DownloadedFile $picture): static
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }

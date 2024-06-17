@@ -14,21 +14,48 @@ class AppFixtures extends Fixture
         // $product = new Product();
         // $manager->persist($product);
         $pools= [];
-        for($i = 0; $i < 3; $i++){
-                    $pool = new Pool();
 
-                    $pool->setCode("Test".$i);
-                    $pools[]= $pool;
-        $manager->persist($pool);
+        $pools[1] = [
+            "name" => "Twisted Planet x Faux Riches Perdent les pedales !",
+            "code"=> "",
+
+        ];
+
+        $pools[2] = [
+            "name" => "Faux Riches Perd les pedales !",
+            "code"=> "lyn4r",
+
+        ];
+        $pools[3] = [
+            "name" => "Radio Active x Faux Riches Perdent les pedales !",
+            "code"=> "lyn4rradio",
+        ];
+
+        foreach ($pools as $key => &$pool) {
+            $data = $pool;
+            $pool = new Pool();
+           
+            $pool->setCode($data['code']);
+            $pool->setName($data['name']);
+            $manager->persist($pool);
+        }
 
 
-                }
-                        for($i = 0; $i < 10; $i++){
-                    $song = new Song();
-                    $song->setName("Song #" . $i);
-                    $song->addPool($pools[array_rand($pools)]);
-        $manager->persist($song);
+
+        
+
+
+
+
+
+        for($i = 1; $i < 10; $i++){
+            $song = new Song();
+            $song->setName("Song #" . $i);
+            $song->addPool($pools[array_rand($pools)]);
+            $manager->persist($song);
         }
         $manager->flush();
     }
+
+    
 }
