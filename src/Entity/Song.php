@@ -14,27 +14,33 @@ class Song
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
     #[ORM\Column(length: 255)]
     private ?string $name = null;
-
+    
     /**
      * @var Collection<int, Pool>
      */
     #[ORM\ManyToMany(targetEntity: Pool::class, mappedBy: 'songs')]
     private Collection $pools;
+    #[Groups([ "getSongs"])]
+    private ?string $url = null;
+
+    
+    #[Groups([ "getSongs"])]
+    #[ORM\ManyToOne]
+    private ?DownloadedFile $file = null;
 
     public function __construct()
     {
         $this->pools = new ArrayCollection();
     }
- #[Groups([ "getSongs"])]
+    #[Groups([ "getSongs"])]
     public function getId(): ?int
     {
         return $this->id;
     }
  #[Groups([ "getSongs"])]
-
+         
     public function getName(): ?string
     {
         return $this->name;
@@ -47,7 +53,16 @@ class Song
 
         return $this;
     }
-
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+      public function setUrl(string $url): static
+    {
+           $this->url = $url;
+         
+                 return $this;
+    }
     /**
      * @return Collection<int, Pool>
      */
@@ -71,6 +86,18 @@ class Song
         if ($this->pools->removeElement($pool)) {
             $pool->removeSong($this);
         }
+
+        return $this;
+    }
+
+    public function getFile(): ?DownloadedFile
+    {
+        return $this->file;
+    }
+
+    public function setFile(?DownloadedFile $file): static
+    {
+        $this->file = $file;
 
         return $this;
     }
