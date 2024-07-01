@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DownloadedFileRepository;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: DownloadedFileRepository::class)]
 class DownloadedFile
@@ -16,9 +18,11 @@ class DownloadedFile
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups([ "getSongs"])]
     #[ORM\Column(length: 255)]
     private ?string $realPath = null;
-
+    
+    #[Groups([ "getSongs"])]
     #[ORM\Column(length: 255)]
     private ?string $publicPath = null;
 
@@ -35,6 +39,7 @@ class DownloadedFile
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups([ "getSongs"])]
     private ?string $realName = null;
 
     #[Vich\UploadableField(mapping:"uploadedFiles", fileNameProperty:'realPath', size:"fileSize")]

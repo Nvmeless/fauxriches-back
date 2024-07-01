@@ -39,21 +39,22 @@ class FilesController extends AbstractController
 
     #[Route('/api/files', name:'files.create', methods:[ 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, SerializerInterface $serializer){
-        $downloadedFile = new DownloadedFile();
-        $files = $request->files->get('file');
-        $downloadedFile->setFile($files);
-        $downloadedFile->setMimeType($files->getClientMimeType());
-        $downloadedFile->setRealName($files->getClientOriginalName());
-        $downloadedFile->setPublicPath('files/songs');
-        $downloadedFile->setUpdatedAt(new DateTime());
-        $downloadedFile->setCreatedAt(new DateTime());
-        $downloadedFile->setStatus("on");
-        // $downloadedFile->setFileSize(0);
+        // $downloadedFile = new DownloadedFile();
+        // $files = $request->files->get('file');
+        // $downloadedFile->setFile($files);
+        // $downloadedFile->setMimeType($files->getClientMimeType());
+        // $downloadedFile->setRealName($files->getClientOriginalName());
+        // $downloadedFile->setPublicPath('files/songs');
+        // $downloadedFile->setUpdatedAt(new DateTime());
+        // $downloadedFile->setCreatedAt(new DateTime());
+        // $downloadedFile->setStatus("on");
+        // // $downloadedFile->setFileSize(0);
 
-        $entityManager->persist($downloadedFile);
-        $entityManager->flush();
-        $jsonFile = $serializer->serialize($downloadedFile, 'json');
-        $location = $urlGenerator->generate('files.get' , ["downloadedFile" => $downloadedFile->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
-        return new JsonResponse($jsonFile, Response::HTTP_CREATED, ['Location' => $location], true);
+        // $entityManager->persist($downloadedFile);
+        // $entityManager->flush();
+        // $jsonFile = $serializer->serialize($downloadedFile, 'json');
+        // $location = $urlGenerator->generate('files.get' , ["downloadedFile" => $downloadedFile->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+        // return new JsonResponse($jsonFile, Response::HTTP_CREATED, ['Location' => $location], true);
+        return new JsonResponse(["message" => "Nice Try ;)"]);
     }
 }

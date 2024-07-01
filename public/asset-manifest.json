@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ac072eea.css",
+    "main.js": "/static/js/main.56d5fc5f.js",
+    "static/js/453.b89650fb.chunk.js": "/static/js/453.b89650fb.chunk.js",
+    "static/media/banneraltered-min.png": "/static/media/banneraltered-min.c8201f82f0e9bdf542f1.png",
+    "static/media/cherry-min.png": "/static/media/cherry-min.cf94fb0df486624d388d.png",
+    "static/media/banneralteredwithouttext-min.png": "/static/media/banneralteredwithouttext-min.250e5486cb520c096b24.png",
+    "static/media/fauxriches-min.png": "/static/media/fauxriches-min.3b57dfee95da38d918da.png",
+    "static/media/banner.jpg": "/static/media/banner.d1ed03ed5ac80fc9b509.jpg",
+    "static/media/banner-min.jpg": "/static/media/banner-min.6bd9abd122b683a7e306.jpg",
+    "static/media/seven-min.png": "/static/media/seven-min.5269e07150d5936f1e2e.png",
+    "static/media/bannerwaiting-min.jpg": "/static/media/bannerwaiting-min.e07416f7271415fa5798.jpg",
+    "static/media/FightingSpirit2.otf": "/static/media/FightingSpirit2.b52ccb14389810d09526.otf",
+    "static/media/4r-min.png": "/static/media/4r-min.aa1c0e87235e058e28bb.png",
+    "service-worker.js": "/service-worker.js",
+    "static/media/bar-min.png": "/static/media/bar-min.b0c620c621f753840d1f.png",
+    "index.html": "/index.html",
+    "main.ac072eea.css.map": "/static/css/main.ac072eea.css.map",
+    "main.56d5fc5f.js.map": "/static/js/main.56d5fc5f.js.map",
+    "453.b89650fb.chunk.js.map": "/static/js/453.b89650fb.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ac072eea.css",
+    "static/js/main.56d5fc5f.js"
+  ]
+}

@@ -25,17 +25,20 @@ class PoolCompletion
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Song $song = null;
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
+   
     public function getPool(): ?Pool
     {
         return $this->pool;
     }
-
     public function setPool(?Pool $pool): static
     {
         $this->pool = $pool;
@@ -63,6 +66,18 @@ class PoolCompletion
     public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getSong(): ?Song
+    {
+        return $this->song;
+    }
+
+    public function setSong(?Song $song): static
+    {
+        $this->song = $song;
 
         return $this;
     }

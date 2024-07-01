@@ -16,20 +16,22 @@ class PoolCompletionRepository extends ServiceEntityRepository
         parent::__construct($registry, PoolCompletion::class);
     }
 
-    //    /**
-    //     * @return PoolCompletion[] Returns an array of PoolCompletion objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+       /**
+        * @return PoolCompletion[] Returns an array of PoolCompletion objects
+        */
+       public function findCorrespondance($value): array
+       {
+           return $this->createQueryBuilder('p')
+               ->andWhere('p.player = :plid')
+               ->andWhere('p.pool = :poid')
+               ->setParameter('plid', $value['player'])
+               ->setParameter('poid', $value['pool'])
+               ->orderBy('p.id', 'ASC')
+               ->setMaxResults(10)
+               ->getQuery()
+               ->getResult()
+           ;
+       }
 
     //    public function findOneBySomeField($value): ?PoolCompletion
     //    {

@@ -18,19 +18,13 @@ class Player
     #[ORM\Column(length: 15)]
     private ?string $ip = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Song $song = null;
-
-    #[ORM\Column]
-    private ?bool $done = false;
 
     /**
      * @var Collection<int, PoolCompletion>
      */
     #[ORM\OneToMany(targetEntity: PoolCompletion::class, mappedBy: 'player')]
     private Collection $poolCompletions;
-
+ 
     public function __construct()
     {
         $this->poolCompletions = new ArrayCollection();
@@ -49,30 +43,6 @@ class Player
     public function setIp(string $ip): static
     {
         $this->ip = $ip;
-
-        return $this;
-    }
-
-    public function getSong(): ?Song
-    {
-        return $this->song;
-    }
-
-    public function setSong(?Song $song): static
-    {
-        $this->song = $song;
-
-        return $this;
-    }
-
-    public function isDone(): ?bool
-    {
-        return $this->done;
-    }
-
-    public function setDone(bool $done): static
-    {
-        $this->done = $done;
 
         return $this;
     }
@@ -105,5 +75,10 @@ class Player
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getIp();
     }
 }
