@@ -2,15 +2,30 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\DownloadedFile;
+use DateTime;
+use Faker\Factory;
 use App\Entity\Pool;
 use App\Entity\Song;
-use DateTime;
-use Doctrine\Bundle\FixturesBundle\Fixture;
+use Faker\Generator;
+use App\Entity\Player;
+use App\Entity\DownloadedFile;
+use App\Entity\PoolCompletion;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class AppFixtures extends Fixture
 {
+
+
+        /**
+     * @var Generator
+     */
+    private Generator $faker;
+
+    public function __construct(){
+        $this->faker = Factory::create('fr_FR');
+    }
+
     public function load(ObjectManager $manager): void
     {
         // $product = new Product();
@@ -41,6 +56,7 @@ class AppFixtures extends Fixture
             $pool->setName($data['name']);
             $newPools[$key] = $pool;
             $manager->persist($pool);
+
             
         }
         $pools = $newPools;
@@ -94,7 +110,7 @@ class AppFixtures extends Fixture
                 "pools" => [2,3]
             ],
         ];
-
+        $songList = [];
         foreach($songs as  $songData){
             $file = new DownloadedFile();
             $song = new Song();
@@ -113,9 +129,34 @@ class AppFixtures extends Fixture
             $song->setFile($file);
             $manager->persist($song);
             $manager->persist($file);
+            $songList[] = $song;
         }
     
         $manager->flush();
+
+        $players = [];
+
+        for($i = 0; $i < 10; $i++){
+            $player = new Player();
+            $player->setIp($this->faker->ipv4());
+            $manager->persist($player);
+
+            $players[] = $player;
+            
+        }
+        $manager->flush();
+
+        for($i = 0; $i < 100; $i++){
+            $poolCompletion = new PoolCompletion();
+            $poolCompletion->setCreatedAt($this->faker->dateTimeBetween('-1 week', '+1 week'))
+            ->setPlayer($players[array_rand($players)])
+            ->setPool($pools[array_rand($pools)])
+            ->setSong($songList[array_rand($songList)]);
+            $manager->persist($poolCompletion);
+
+        }
+        $manager->flush();
+
     }
 
     

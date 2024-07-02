@@ -2,11 +2,15 @@
 
 namespace App\Controller\Admin;
 
+use DateTime;
+use DatePeriod;
+use DateInterval;
 use App\Entity\PoolCompletion;
 use Symfony\UX\Chartjs\Model\Chart;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use App\Repository\PoolCompletionRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
@@ -20,7 +24,105 @@ class DashboardController extends AbstractDashboardController
 
        public function __construct(
         private ChartBuilderInterface $chartBuilder,
+        private PoolCompletionRepository $poolCompletionRepository
     ) {
+
+    }
+    private function downloadByDayChart(){
+            $period = new DatePeriod(
+        new DateTime('2024-06-24 18:03:27.000'),
+        new DateInterval('P1D'),
+        new DateTime(),
+    );
+    $dates = [];
+    $stats = [];
+    
+    foreach ($period as $key => $value) {
+    $dates[] = $value->format('Y-m-d');
+    }
+    foreach($dates as $key => $value){
+
+        if(isset( $dates[$key + 1])){
+            $stats[] = $this->poolCompletionRepository->getStatistics($value, $dates[$key + 1])[0][1];
+
+        }
+    }
+
+            // dd($stats);
+            // dd($pcomp);
+           $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
+        // ...set chart data and options somehow
+
+        $chart->setData([
+            'labels' => $dates,
+            'datasets' => [
+                [
+                    'label' => 'Download',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'borderColor' => 'rgb(255, 99, 132)',
+                    'data' =>$stats,
+                ],
+            ],
+        ]);
+
+        $chart->setOptions([
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => 0,
+                    'suggestedMax' => max($stats) + 5,
+                ],
+            ],
+        ]);
+        return $chart;
+    }
+
+
+        private function songRepartitionChart(){
+            $period = new DatePeriod(
+        new DateTime('2024-06-24 18:03:27.000'),
+        new DateInterval('P1D'),
+        new DateTime(),
+    );
+    $dates = [];
+    $stats = [];
+    
+    foreach ($period as $key => $value) {
+    $dates[] = $value->format('Y-m-d');
+    }
+    foreach($dates as $key => $value){
+
+        if(isset( $dates[$key + 1])){
+            $stats[] = $this->poolCompletionRepository->getStatistics($value, $dates[$key + 1])[0][1];
+
+        }
+    }
+
+            // dd($stats);
+            // dd($pcomp);
+           $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
+        // ...set chart data and options somehow
+
+        $chart->setData([
+            'labels' => $dates,
+            'datasets' => [
+                [
+                    'label' => 'Download',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'borderColor' => 'rgb(255, 99, 132)',
+                    'data' =>$stats,
+                ],
+            ],
+        ]);
+
+        $chart->setOptions([
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => 0,
+                    'suggestedMax' => max($stats) + 5,
+                ],
+            ],
+        ]);
+        return $chart;
     }
     #[Route('/admin', name: 'admin')]
     public function index(): Response
@@ -40,32 +142,9 @@ class DashboardController extends AbstractDashboardController
 
         // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-     
-           $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
-        // ...set chart data and options somehow
+          
 
-     
-        $chart->setData([
-            'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            'datasets' => [
-                [
-                    'label' => 'My First dataset',
-                    'backgroundColor' => 'rgb(255, 255, 255)',
-                    'borderColor' => 'rgb(255, 99, 132)',
-                    'data' => [0, 10, 5, 2, 20, 30, 45],
-                ],
-            ],
-        ]);
-
-        $chart->setOptions([
-            'scales' => [
-                'y' => [
-                    'suggestedMin' => 0,
-                    'suggestedMax' => 100,
-                ],
-            ],
-        ]);
-        return $this->render('admin/dashboard.html.twig', ["chart" => $chart]);
+        return $this->render('admin/dashboard.html.twig', ["downloadByDayChart" => $this->downloadByDayChart(),"songRepartitionChart" => $this->songRepartitionChart()]);
     }
 
     public function configureDashboard(): Dashboard
@@ -95,4 +174,12 @@ class DashboardController extends AbstractDashboardController
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 
+    public function configureAssets(): Assets
+{
+    $assets = parent::configureAssets();
+
+    $assets->addWebpackEncoreEntry('app');
+
+    return $assets;
+}
 }

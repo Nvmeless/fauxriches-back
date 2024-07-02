@@ -33,6 +33,19 @@ class PoolCompletionRepository extends ServiceEntityRepository
            ;
        }
 
+       public function getStatistics($start, $end): array
+       {
+
+           return $this->createQueryBuilder('p')
+           ->select('COUNT(p)')
+               ->andWhere('p.createdAt > :pstart')
+               ->andWhere('p.createdAt < :pend')
+               ->setParameter('pstart', $start)
+               ->setParameter('pend', $end)
+               ->getQuery()
+               ->getResult()
+           ;
+       }
     //    public function findOneBySomeField($value): ?PoolCompletion
     //    {
     //        return $this->createQueryBuilder('p')

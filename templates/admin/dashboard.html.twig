@@ -1,7 +1,15 @@
 {# templates/admin/dashboard.html.twig #}
 {% extends '@EasyAdmin/layout.html.twig' %}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
 {% block main %}
     {# ... #}
-{{ render_chart(chart) }}
+{{ render_chart(downloadByDayChart) }}
+{{ render_chart(songRepartitionChart) }}
 
 {% endblock main %}
