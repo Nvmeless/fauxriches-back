@@ -2,6 +2,7 @@
 {% extends '@EasyAdmin/layout.html.twig' %}
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
+
     {% endblock %}
 
     {% block javascripts %}
@@ -9,7 +10,15 @@
     {% endblock %}
 {% block main %}
     {# ... #}
+    <h1>{{countDownload}} Téléchargements</h1>
+    {#   #}
 {{ render_chart(downloadByDayChart) }}
+<div style="display:flex;">
+<span style="width:50%;">
 {{ render_chart(songRepartitionChart) }}
-
+</span>
+<span style="width:50%;">
+{{ render_chart(downloadByPoolsChart) }}
+</span>
+</div>
 {% endblock main %}
