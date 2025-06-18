@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PoolCompletionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PoolCompletionRepository::class)]
 class PoolCompletion
@@ -27,14 +28,18 @@ class PoolCompletion
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups("getSongs")]
     private ?Song $song = null;
+
+    #[ORM\Column]
+    private ?bool $isReroll = null;
 
 
     public function getId(): ?int
     {
         return $this->id;
     }
-   
+
     public function getPool(): ?Pool
     {
         return $this->pool;
@@ -78,6 +83,18 @@ class PoolCompletion
     public function setSong(?Song $song): static
     {
         $this->song = $song;
+
+        return $this;
+    }
+
+    public function isReroll(): ?bool
+    {
+        return $this->isReroll;
+    }
+
+    public function setIsReroll(bool $isReroll): static
+    {
+        $this->isReroll = $isReroll;
 
         return $this;
     }

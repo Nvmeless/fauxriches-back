@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Roll The Dice !</title>
+{{ encore_entry_link_tags('app') }}
+  </head>
+<body data-roll="{{ roll }}">
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+<div id="final"></div>
+<div id="loader"></div>
+{% block javascript %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+
+   
+
+<style>
+    @font-face {
+  font-family: fightingSpirit;
+  src: url(./assets/fonts/fighting.otf);
+}
+
+</style>
+</body>
+</html>
+

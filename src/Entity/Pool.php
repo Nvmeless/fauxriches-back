@@ -6,6 +6,8 @@ use App\Repository\PoolRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 
 #[ORM\Entity(repositoryClass: PoolRepository::class)]
@@ -29,6 +31,7 @@ class Pool
     private ?DownloadedFile $picture = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getSongs"])]
     private ?string $name = null;
 
     /**
@@ -36,6 +39,10 @@ class Pool
      */
     #[ORM\OneToMany(targetEntity: PoolCompletion::class, mappedBy: 'pool', orphanRemoval: true)]
     private Collection $poolCompletions;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["getSongs"])]
+    private ?string $edition = null;
 
     public function __construct()
     {
@@ -137,8 +144,20 @@ class Pool
 
         return $this;
     }
-        public function __toString()
+    public function __toString()
     {
         return (string) $this->getName();
+    }
+
+    public function getEdition(): ?string
+    {
+        return $this->edition;
+    }
+
+    public function setEdition(?string $edition): static
+    {
+        $this->edition = $edition;
+
+        return $this;
     }
 }

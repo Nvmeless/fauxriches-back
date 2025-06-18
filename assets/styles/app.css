@@ -1,3 +1,7 @@
 body {
-    background-color: lightgray;
+  background-color: lightgray;
+}
+@font-face {
+  font-family: fightingSpirit;
+  src: url(../fonts/fighting.otf);
 }

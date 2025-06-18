@@ -6,6 +6,7 @@ use App\Entity\Player;
 use App\Entity\PoolCompletion;
 use App\Repository\PoolRepository;
 use App\Repository\PlayerRepository;
+use App\Repository\SongRepository;
 use PhpParser\Node\Expr\Cast\Array_;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,46 +23,45 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class JackpotController extends AbstractController
 {
     #[Route('/jackpot/code', name: 'app_jackpot')]
-    public function index(): JsonResponse
+    public function index(SerializerInterface $serializer, SongRepository $songRepository): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/JackpotController.php',
-        ]);
+
+        $data = $serializer->serialize($songRepository->findAll(), 'json', ['groups' => 'getSongs']);
+        return new JsonResponse($data, 200, [], true);
     }
 
 
     #[Route('jackpot/{code}', name: 'jackpot.roll')]
-    public function rollView(string $code,PoolCompletionRepository $poolCompletionRepository, EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PoolRepository $poolRepository, SerializerInterface $serializer, Request $request, UrlGeneratorInterface $urlGenerator): Response
+    public function rollView(string $code, PoolCompletionRepository $poolCompletionRepository, EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PoolRepository $poolRepository, SerializerInterface $serializer, Request $request, UrlGeneratorInterface $urlGenerator): Response
     {
-        $result = $this->roll($code, $request,  $poolCompletionRepository,  $entityManager,  $playerRepository,  $poolRepository,  $serializer,  $urlGenerator);
+        $result = $this->roll($code, $request, $poolCompletionRepository, $entityManager, $playerRepository, $poolRepository, $serializer, $urlGenerator);
         $pool = $result["pool"];
         $song = $result["song"];
         return $this->render('jackpot/jackpot.html.twig', [
-            "pool"=> $pool->getName(),
+            "pool" => $pool->getName(),
             "name" => $song->getName(),
             "link" => $song->getUrl()
         ]);
     }
-       #[Route('api/jackpot/{code}', name: 'jackpot.roll.api')]
+    #[Route('api/jackpot/{code}', name: 'jackpot.roll.api')]
     // public function roll(string $code,PoolCompletionRepository $poolCompletionRepository, EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PoolRepository $poolRepository, SerializerInterface $serializer, Request $request, UrlGeneratorInterface $urlGenerator): JsonResponse
-    public function rollApi(string $code,PoolCompletionRepository $poolCompletionRepository, EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PoolRepository $poolRepository, SerializerInterface $serializer, Request $request, UrlGeneratorInterface $urlGenerator): Response
+    public function rollApi(string $code, PoolCompletionRepository $poolCompletionRepository, EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PoolRepository $poolRepository, SerializerInterface $serializer, Request $request, UrlGeneratorInterface $urlGenerator): Response
     {
-        $result = $this->roll($code, $request,  $poolCompletionRepository,  $entityManager,  $playerRepository,  $poolRepository,  $serializer,  $urlGenerator);
+        $result = $this->roll($code, $request, $poolCompletionRepository, $entityManager, $playerRepository, $poolRepository, $serializer, $urlGenerator);
         $pool = $result["pool"];
         $song = $result["song"];
-        $jsonSongs = $serializer->serialize($song, 'json',["groups" => "getSongs"]);
-        return new JsonResponse($jsonSongs, Response::HTTP_OK,[], true);
+        $jsonSongs = $serializer->serialize($song, 'json', ["groups" => "getSongs"]);
+        return new JsonResponse($jsonSongs, Response::HTTP_OK, [], true);
     }
 
-    private function roll(string $code,Request $request, PoolCompletionRepository $poolCompletionRepository, EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PoolRepository $poolRepository, SerializerInterface $serializer, UrlGeneratorInterface $urlGenerator): Array
+    private function roll(string $code, Request $request, PoolCompletionRepository $poolCompletionRepository, EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PoolRepository $poolRepository, SerializerInterface $serializer, UrlGeneratorInterface $urlGenerator): array
     {
         $playerIp = $request->getClientIp();
         $player = $playerRepository->findBy(["ip" => $playerIp]);
         $pools = $poolRepository->findBy(["code" => $code]);
-        if(count($pools)){
+        if (count($pools)) {
             $pool = $pools[0];
-             if(!count($player)){
+            if (!count($player)) {
                 $player = new Player();
 
 
@@ -75,9 +75,9 @@ class JackpotController extends AbstractController
                     "player" => $player->getId(),
                     "pool" => $pool->getId()
                 ]);
-            } 
-            
-            if(count($hasDoneThisPool)){
+            }
+
+            if (count($hasDoneThisPool)) {
                 $song = $hasDoneThisPool[0]->getSong();
             } else {
                 $poolCompletion = new PoolCompletion();
@@ -101,7 +101,7 @@ class JackpotController extends AbstractController
         $location = $urlGenerator->generate("app_files", [], UrlGeneratorInterface::ABSOLUTE_URL);
         $location = $location . str_replace("/public/", "", $file->getPublicPath() . '/' . $file->getRealPath());
         $song->setUrl($location);
-        
-        return ["pool"=> $pool,"song"=> $song];
+
+        return ["pool" => $pool, "song" => $song];
     }
 }
